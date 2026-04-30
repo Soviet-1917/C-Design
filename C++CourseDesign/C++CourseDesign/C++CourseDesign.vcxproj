@@ -130,7 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\BollowRecord.cpp" />
+    <ClCompile Include="src\BorrowRecord.cpp" />
     <ClCompile Include="src\Book.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Student.cpp" />

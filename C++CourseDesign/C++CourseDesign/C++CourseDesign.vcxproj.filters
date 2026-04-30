@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\BollowRecord.cpp">
+    <ClCompile Include="src\BorrowRecord.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\Book.cpp">

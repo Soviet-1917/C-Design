@@ -345,7 +345,7 @@ void System::returnBook() {
                 cout << "你怎么在借书前归还的？无法归还！\n";
                 return;
             }
-            if (returnTime <= r.getdueTime()) {
+            if (r.getdueTime() <= returnTime) {
                 r.setStatus(OVERTIME);
             }
             else {
