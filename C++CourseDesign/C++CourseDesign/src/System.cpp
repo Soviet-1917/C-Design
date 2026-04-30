@@ -161,31 +161,25 @@ void System::newBookEnter() {
 }
 
 // 图书查询的修改与删除
-// 图书查询的修改与删除
 void System::manageBook() {
     string keyword;
     cout << "===== 图书管理 =====\n";
     cout << "输入书名或编号搜索: ";
     getline(cin, keyword);
-
-    // 查找匹配的图书
-    vector<int> foundIndexes;
-    for (int i = 0; i < books.size(); i++) {
-        if (books[i].getName().find(keyword) != string::npos ||
-            books[i].getId().find(keyword) != string::npos) {
-            foundIndexes.push_back(i);
-        }
-    }
-
-    if (foundIndexes.empty()) {
-        cout << "未找到匹配的图书!\n";
+    if (keyword.empty()) {
+        cout << "输入内容为空!\n";
         return;
     }
-
-    // 显示找到的图书
-    for (int i = 0; i < foundIndexes.size(); i++) {
-        cout << "\n[" << i + 1 << "]";
-        books[foundIndexes[i]].display();
+    bool foundBook = false;
+    for (auto& i : books) {
+        if (keyword == i.getId() || keyword == i.getName()) {
+            i.display();
+            foundBook = true;
+        }
+    }
+    if (!foundBook) {
+        cout << "未找到图书!\n";
+        return;
     }
 
     cout << "\n\n选择操作: 1-修改  2-删除  0-返回\n";
@@ -195,17 +189,27 @@ void System::manageBook() {
 
     if (choice == 0) return;
 
-    cout << "选择要操作的图书序号: ";
-    int idx;
+    cout << "选择要操作的图书序号:(通过搜索得到) ";
+    string idx;
     cin >> idx;
     cin.ignore();
 
-    if (idx < 1 || idx > foundIndexes.size()) {
-        cout << "无效序号!\n";
+    Book* b = &books[0];
+    bool foundIdx = false;
+    int realIdx = 0;
+
+    for (int i = 0;i < books.size();i ++) {
+        if (books[i].getId() == idx) {
+            b = &books[i];
+            foundIdx = true;
+            realIdx = i;
+            break;
+        }
+    }
+    if (!foundIdx) {
+        cout << "未找到图书！\n";
         return;
     }
-
-    int realIdx = foundIndexes[idx - 1];
 
     if (choice == 1) {  // 修改
         string name, author, newId;
@@ -213,36 +217,34 @@ void System::manageBook() {
 
         cout << "新书名(按回车跳过): ";
         getline(cin, name);
-        if (!name.empty()) books[realIdx].setName(name);
+        if (!name.empty()) b->setName(name);
 
         cout << "新编号(按回车跳过): ";
         getline(cin, newId);
         if (!newId.empty()) {
             // 检查新编号是否与其他图书重复
             bool duplicate = false;
-            for (int i = 0; i < books.size(); i++) {
-                if (i != realIdx && books[i].getId() == newId) {
+            for (auto &i : books) {
+                if (newId == i.getId()) {
                     duplicate = true;
-                    break;
                 }
             }
             if (duplicate) {
                 cout << "该编号已被其他图书使用，编号修改失败！\n";
             }
             else {
-                books[realIdx].setId(newId);
-                cout << "编号修改成功！\n";
+                b->setId(newId);
             }
         }
 
         cout << "新价格(输入负数跳过): ";
         cin >> price;
         cin.ignore();
-        if (price >= 0) books[realIdx].setPrice(price);
+        if (price >= 0) b->setPrice(price);
 
         cout << "新作者(输入回车跳过): ";
         getline(cin, author);
-        if (!author.empty()) books[realIdx].setAuthor(author);
+        if (!author.empty()) b->setAuthor(author);
 
         cout << "修改完成!\n";
     }
