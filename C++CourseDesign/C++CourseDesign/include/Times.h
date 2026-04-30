@@ -15,4 +15,6 @@ public:
     int getYear() { return year; }
     int getMonth() { return month; }
     int getDay() { return day; }
+    friend bool operator<=(const Time& t1, const Time& t2);
+    friend bool operator<(const Time& t1, const Time& t2);
 };

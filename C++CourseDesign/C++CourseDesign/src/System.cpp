@@ -1,4 +1,5 @@
 #include "System.h"
+#include "Time.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -307,6 +308,12 @@ void System::borrowBook() {
 
     Time outDate(y1, m1, d1);
     Time dueDate(y2, m2, d2);
+
+    if (outDate < dueDate) {
+        cout << "出库时间 < 归还时间，输入有误！\n";
+        return;
+    }
+
     BorrowRecord rec(book->getId(), stuName, *stu, outDate, dueDate);
     records.push_back(rec);
 
@@ -319,19 +326,31 @@ void System::borrowBook() {
 // 还书
 void System::returnBook() {
     string bookId, stuId;
-
     cout << "===== 办理还书 =====\n";
     cout << "图书编号: ";
     getline(cin, bookId);
     cout << "学号: ";
     getline(cin, stuId);
-
+    
     // 查找借阅记录
     for (auto& r : records) {
         if (r.getBookId() == bookId.c_str() &&
             r.getStudent().getId() == stuId &&
             r.getStatus() == LEND) {
-            r.setStatus(RETURN);
+            cout << "输入归还日期:" << "\n";
+            int y, m, d;
+            cin >> y >> m >> d;
+            Time returnTime(y, m, d);
+            if (returnTime < r.getLendTime()) {
+                cout << "你怎么在借书前归还的？无法归还！\n";
+                return;
+            }
+            if (returnTime <= r.getdueTime()) {
+                r.setStatus(OVERTIME);
+            }
+            else {
+                r.setStatus(RETURN);    
+            }
 
             // 库存+1
             for (auto& b : books) {

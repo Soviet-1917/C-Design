@@ -27,4 +27,6 @@ public:
     void setStatus(RecordStatus s); 
     Student& getStudent();
     string getBorrower();
+    Time getdueTime();
+    Time getLendTime();
 };
